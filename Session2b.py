@@ -15,7 +15,3 @@ print(instagram["mayank"])
 
 print(instagram["navkiran"] & instagram["mayank"])
 
-whatsapp = {
-    "+919876383849": "+918699283849" , {"hello", "hi"}
-}
-print(whatsapp["+919876383849"])
