@@ -1,6 +1,6 @@
 """
     Another Brick in the Wall
-    WHo placed, the last brick and how many?
+    Who placed, the last brick and how many?
 
     Mr. John -> Requirement | create a wall with 13 bricks
                          BRICKS
@@ -17,5 +17,27 @@
         1 brick
 """
 
-
+bricks = int(input("number of bricks:"))
+sum = 0
+idx = 1
+joe = 1
+while sum< bricks:
+    print("joe inserted: ", joe)
+    john = 2*joe
+    print("John inserted:", john)
+    if sum + joe >= bricks:
+        sum += joe
+        last_person = "Joe"
+        last_bricks = joe
+        break
     
+    sum += joe
+    if sum + john >= bricks:
+        sum += john
+        last_person = "John"
+        last_bricks = john
+        break
+    sum += john
+    print("Sum: ", sum)
+    joe +=1
+print("We need total bricks", bricks, "so in last iteration bricks inserted were: ",last_bricks - (sum -bricks), "which was inserted by: ", last_person)
