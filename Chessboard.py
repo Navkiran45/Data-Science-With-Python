@@ -65,6 +65,7 @@ for i in range(0,8):
             else:
                     print(white_square, end = " ")
         else:
+            # Other rows
             if i%2 == 0:
             #print(j%2, end =" ")
                 if j%2 == 0:
