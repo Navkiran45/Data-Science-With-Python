@@ -16,11 +16,11 @@ class Customer:
         self.gender = input("Enter Gender: ")
         self.age = int(input("Enter Age: "))
     def show(self):
-        print("------------CUSTOMER------------")
+        print("------------CUSTOMER-----------------")
         print("Name: {} | Phone Number: {}".format(self.name, self.phn_no))
         print("Email: {} | Address: {}".format(self.email, self.address))
         print("Gender: {} | Age: {}".format(self.gender, self.age))
-        print("--------------------------------")
+        print("-------------------------------------")
 
     def to_csv(self):
         data = "{},{},{},{},{}\n".format(self.name, self.phn_no, self.email, self.address, self.gender, self.age)

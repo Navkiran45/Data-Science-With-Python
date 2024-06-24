@@ -24,9 +24,9 @@ class Driver:
         self.vehicle = Vehicle() #Object Construction
         self.vehicle.add_vehicle_details()
     def show(self):
-        print("------------DRIVER------------")
+        print("------------DRIVER----------------")
         print("Name: {} | Gender: {} | Age: {}".format(self.name, self.gender, self.age))
         print("Email: {} | License Number: {}".format(self.email, self.license_number))
         print("Phone Number: {} | Ratings {}".format(self.phone_number,self.rating))
-        print("-------------------------------")
+        print("----------------------------------")
         self.vehicle.show()

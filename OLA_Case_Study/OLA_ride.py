@@ -26,7 +26,7 @@ class Ride:
         
     def show(self):
         self.customer.show()
-        print("------------RIDE------------")
+        print("------------RIDE---------------")
         print("From: {} | To: {} ".format(self.from_location, self.to_location))
         print("Distance: {} | Fare: {}".format(self.distance, self.fare))
         print("Date: {} | Time {}".format(self.date,self.time))

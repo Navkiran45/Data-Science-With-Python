@@ -29,10 +29,10 @@ class Vehicle:
         self.model = input("Enter model: ")
 
     def show(self):
-        print("------------VEHICLE------------")
+        print("------------VEHICLE--------------")
         print("Number: {} | Brand: {}".format(self.reg_number, self.brand))
         print("Model: {} | Color: {}".format(self.model, self.color))
-        print("--------------------------------")
+        print("---------------------------------")
 """
 vehicle = Vehicle(reg_number="PB10HI8055", brand="Hundai", model="i20",color="white")
 vehicle = Vehicle()
