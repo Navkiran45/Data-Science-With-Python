@@ -1,6 +1,6 @@
-from OLA_Case_Study.OLA_Customer import Customer
-from OLA_Case_Study.OLA_driver import Driver
-from OLA_Case_Study.OLA_vehicle import Vehicle
+from OLA_Customer import Customer
+from OLA_driver import Driver
+from OLA_vehicle import Vehicle
 
 class Ride:
     def __init__(self, customer= None, date= "20 June 2024", time ="12:00", from_location="Home", to_location="Work", distance=4, fare= 200, driver= None):

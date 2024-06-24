@@ -1,5 +1,5 @@
 #Driver = name, gender, age, email, license_number, phone number, vehicle [1 to 1]
-from OLA_Case_Study.OLA_vehicle import Vehicle
+from OLA_vehicle import Vehicle
 class Driver:
     def __init__( self,name="NA", gender="NA", age=18, email="NA", license_number="NA", phone_number="NA", rating=2.5, vehicle= None):
         self.name = name

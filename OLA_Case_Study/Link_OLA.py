@@ -1,7 +1,7 @@
-from OLA_Case_Study.OLA_Customer import Customer
-from OLA_Case_Study.OLA_driver import Driver
-from OLA_Case_Study.OLA_vehicle import Vehicle
-from OLA_Case_Study.OLA_ride import Ride
+from OLA_Customer import Customer
+from OLA_driver import Driver
+from OLA_vehicle import Vehicle
+from OLA_ride import Ride
 
 #Driver Application
 driver = Driver()
