@@ -42,7 +42,7 @@ class Customer:
         email = input("Enter Email: ")
         if len(email) != 0:
             self.email = email
-        age = int(input("Enter Age: "))
+        age = input("Enter Age: ")
         if len(age) != 0:
             self.age = int(age)
         gender = input("Enter Gender: ")
