@@ -6,6 +6,7 @@ from flask import *
 import datetime
 import hashlib
 from database import MongoDBHelper
+from bson.objectid import ObjectId
 
 web_app = Flask("Doctor's App")
 db_helper = MongoDBHelper()
@@ -125,6 +126,55 @@ def add_patient_in_db():
     result = db_helper.insert(patient_data)
    
     return render_template("success.html", message = "Patient added Successfully." , name= session['name'], email=session['email'] )
+
+@web_app.route("/update-patient/<id>")
+def update_patient(id):
+    print("Patient to be updated: ", id)
+
+    # Save Patient ID in Session, which needs to be updated
+    session["id"] = id
+    
+    # Fetch Document from patient collection, where ID Matches
+    query = {"_id": ObjectId(id)}
+    db_helper.collection = db_helper.db["patients"]
+
+    #result is a list
+    result = db_helper.fetch(query=query)
+
+    # As we will get list of documents, 0th index will be our document
+    # with patient id matching we have passed
+    patient_doc = result[0]
+    return render_template("update.html", name= session['name'], email=session['email'], patient = patient_doc )
+
+@web_app.route("/update-patient-in-db", methods= ["POST"])
+def update_patient_in_db():
+    # Create Dictionary with data from HTML form
+    patient_data = {
+        "name": request.form["name"],
+        "email": request.form["email"],
+        "phone": request.form["phone"],
+        "gender": request.form["gender"],
+        "age": int(request.form["age"]),
+        "address": request.form["address"],
+        "doctor_email": session["email"],
+        "doctor_name": session["name"],
+        "created_on": datetime.datetime.now()
+    }
+    
+    db_helper.collection = db_helper.db["patients"]
+    query = {"_id": ObjectId(session["id"])}
+    # To save Patient Data in MongoDB
+    result = db_helper.update(patient_data, query)
+   
+    return render_template("success.html", message = "Patient Updated Successfully." , name= session['name'], email=session['email'] )
+
+@web_app.route("/delete-patient/<id>")
+def delete_patient(id):
+    print("Patient to be deleted: ", id)
+    query = {"_id": ObjectId(id)}
+    db_helper.collection = db_helper.db["patients"]
+    db_helper.delete(query)
+    return render_template("success.html", message = "Patient Deleted Successfully." , name= session['name'], email=session['email'] )
 
 @web_app.route("/fetch-patients")
 def fetch_patients_from_db():

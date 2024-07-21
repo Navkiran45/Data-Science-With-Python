@@ -71,7 +71,7 @@
                             <td>{{patient['age']}}</td>
                             <td>{{patient['address']}}</td>
                             <td>{{patient['created_on']}}</td>
-                            <td><a herf="#">Update</a> | <a herf="#">Delete</a></td>
+                            <td><a href="/update-patient/{{patient['_id']}}">Update</a> | <a href="/delete-patient/{{patient['_id']}}">Delete</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
