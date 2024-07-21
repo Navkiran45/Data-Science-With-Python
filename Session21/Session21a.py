@@ -21,6 +21,8 @@ class User:
         self.age = int(input("Enter Your Age: "))
         self.gender = input("Enter Your Gender: ")
 
+"""
 user = User()
 user.add_user_details()
 print(vars(user))
+"""
