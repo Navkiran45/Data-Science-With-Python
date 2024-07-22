@@ -1,5 +1,6 @@
 """
 Web Application Development with Flask
+SAS Model
 """
 
 from flask import *
@@ -197,6 +198,52 @@ def fetch_patients_from_db():
         return render_template("patients.html", patients= result, name=session["name"], email=["email"])
     else:
         return render_template("error.html", message ="Patients Not Found" , name= session['name'], email=session['email'])
+
+@web_app.route("/add-consultation/<id>")
+def add_consultation(id):
+    
+    query = {"_id": ObjectId(id)}
+    db_helper.collection = db_helper.db["patients"]
+
+    #result is a list
+    result = db_helper.fetch(query=query)
+
+    # As we will get list of documents, 0th index will be our document
+    # with patient id matching we have passed
+    patient_doc = result[0]
+    session["patient_name"] = patient_doc["name"]
+    # Store the Patient Id in Session temporarily
+    session["patient_id"] = id
+    return render_template("add-consultation.html", name= session['name'], email = session['email'], patient_name=session["patient_name"])
+
+@web_app.route("/add-consultation-in-db", methods= ["POST"])
+def add_consultation_in_db():
+
+    # Create Dictionary with data from HTML form
+    consultation_data = {
+        "complaints": request.form["complaints"],
+        "bp": request.form["bp"],
+        "temperature": request.form["temperature"],
+        "sugar": request.form["sugar"],
+        "medicines": request.form["medicines"],
+        "remarks": request.form["remarks"],
+        "follow_up": request.form["follow_up"],
+        "doctor_email": session["email"],
+        "doctor_name": session["name"],
+        "patient_id" : session["patient_id"],
+        "patient_name" : session["patient_name"],
+        "created_on": datetime.datetime.now()
+    }
+    
+    db_helper.collection = db_helper.db["consultations"]
+    # To save Consultation Data in MongoDB
+    result = db_helper.insert(consultation_data)
+   
+    return render_template("success.html", message = "Consultation added Successfully." , name= session['name'], email=session['email']  )
+
+@web_app.route("/view-consultations/<id>")
+def view_consultations(id):
+    pass
 
 def main():
     # To use Session Tracking, create a secret key
