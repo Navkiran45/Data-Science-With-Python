@@ -245,6 +245,52 @@ def add_consultation_in_db():
 def view_consultations(id):
     pass
 
+@web_app.route("/fetch-consultations")
+def fetch_consultations_from_db():
+      
+    if len(session["email"]) == 0:
+        return redirect("/")
+    
+    # Create Dictionary with data from HTML form
+    user_data = {
+        "doctor_email": session["email"]
+    }
+    db_helper.collection = db_helper.db["consultations"]
+    
+    # To fetch Data from MongoDB
+    result = db_helper.fetch(query = user_data)
+    # result here is list of document(dictionaries) fetched from MongoDB
+
+    if len(result)>0:
+        print(result)
+        return render_template("consultations.html", consultations= result, name=session["name"], email=session["email"])
+    else:
+        return render_template("error.html", message ="Consultations Not Found" , name= session['name'], email=session['email'])
+
+@web_app.route("/fetch-consultations-of-patient/<id>")
+def fetch_consultations_of_patient_from_db(id):
+      
+    if len(session["email"]) == 0:
+        return redirect("/")
+    
+    # Create Dictionary with data from HTML form
+    user_data = {
+        "doctor_email": session["email"],
+        "patient_id": id
+    }
+    db_helper.collection = db_helper.db["consultations"]
+    
+    # To fetch Data from MongoDB
+    result = db_helper.fetch(query = user_data)
+    # result here is list of document(dictionaries) fetched from MongoDB
+
+    if len(result)>0:
+        print(result)
+        return render_template("consultations.html", consultations= result, name=session["name"], email=session["email"])
+    else:
+        return render_template("error.html", message ="Consultations Not Found" , name= session['name'], email=session['email'])
+
+
 def main():
     # To use Session Tracking, create a secret key
     web_app.secret_key = "doctors-key-v1"
