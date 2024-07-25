@@ -201,10 +201,10 @@ def fetch_patients_from_db():
 
 @web_app.route("/add-consultation/<id>")
 def add_consultation(id):
-    
+    session["patient_id"] = id
     query = {"_id": ObjectId(id)}
     db_helper.collection = db_helper.db["patients"]
-
+    
     #result is a list
     result = db_helper.fetch(query=query)
 
@@ -213,12 +213,12 @@ def add_consultation(id):
     patient_doc = result[0]
     session["patient_name"] = patient_doc["name"]
     # Store the Patient Id in Session temporarily
-    session["patient_id"] = id
+    
     return render_template("add-consultation.html", name= session['name'], email = session['email'], patient_name=session["patient_name"])
 
 @web_app.route("/add-consultation-in-db", methods= ["POST"])
 def add_consultation_in_db():
-
+    
     # Create Dictionary with data from HTML form
     consultation_data = {
         "complaints": request.form["complaints"],
@@ -227,14 +227,15 @@ def add_consultation_in_db():
         "sugar": request.form["sugar"],
         "medicines": request.form["medicines"],
         "remarks": request.form["remarks"],
-        "follow_up": request.form["follow_up"],
-        "doctor_email": session["email"],
-        "doctor_name": session["name"],
+        "follow_up": request.form['follow_up'],
+        "doctor_email": session['email'],
+        "doctor_name": session['name'],
         "patient_id" : session["patient_id"],
         "patient_name" : session["patient_name"],
         "created_on": datetime.datetime.now()
     }
-    
+
+
     db_helper.collection = db_helper.db["consultations"]
     # To save Consultation Data in MongoDB
     result = db_helper.insert(consultation_data)
