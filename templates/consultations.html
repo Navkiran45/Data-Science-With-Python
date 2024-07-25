@@ -29,7 +29,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Search Patient</a>
+                        <a class="nav-link" href="/search-patient">Search Patient</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
@@ -72,6 +72,7 @@
                         <td>{{consultation['followup']}}</td>
                         <td>{{consultation['patient_name']}}</td>
                         <td>{{consultation['created_on']}}</td>
+                        <td><a href="/update-consultation/{{consultation['c_id']}}">Update</a> | <a href="/delete-consultation/{{consultation['patient_id']}}">Delete</a> </td>
                     </tr>
                     {% endfor %}
                 </tbody>

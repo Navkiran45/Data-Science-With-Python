@@ -241,10 +241,6 @@ def add_consultation_in_db():
    
     return render_template("success.html", message = "Consultation added Successfully." , name= session['name'], email=session['email']  )
 
-@web_app.route("/view-consultations/<id>")
-def view_consultations(id):
-    pass
-
 @web_app.route("/fetch-consultations")
 def fetch_consultations_from_db():
       
@@ -289,6 +285,77 @@ def fetch_consultations_of_patient_from_db(id):
         return render_template("consultations.html", consultations= result, name=session["name"], email=session["email"])
     else:
         return render_template("error.html", message ="Consultations Not Found" , name= session['name'], email=session['email'])
+
+@web_app.route("/delete-consultation/<id>")
+def delete_consultation(id):
+    print("Consultation to be deleted: ", id)
+    query = {"patient_id": id}
+    db_helper.collection = db_helper.db["consultations"]
+    db_helper.delete(query)
+    return render_template("success.html", message = "Consultation Deleted Successfully." , name= session['name'], email=session['email'] )
+
+@web_app.route("/update-consultation/<c_id>")
+def update_consultation(c_id):
+    print("Consultation to be updated: ", c_id)
+    
+    # Fetch Document from patient collection, where ID Matches
+    query = {"consultation_id" : c_id}
+    db_helper.collection = db_helper.db["consultations"]
+
+    #result is a list
+    result = db_helper.fetch(query=query)
+
+    # As we will get list of documents, 0th index will be our document
+    # with patient id matching we have passed
+    patient_doc = result[0]
+    session["consultationt_id"] = c_id
+    return render_template("update.html", name= session['name'], email=session['email'], patient = patient_doc )
+
+@web_app.route("/update-consultation-in-db", methods= ["POST"])
+def update_consultation_in_db():
+    # Create Dictionary with data from HTML form
+    consultation_data = {
+        "complaints": request.form["complaints"],
+        "bp": request.form["bp"],
+        "temperature": request.form["temperature"],
+        "sugar": request.form["sugar"],
+        "medicines": request.form["medicines"],
+        "remarks": request.form["remarks"],
+        "followup": request.form["followup"],
+        "patient_name": request.form["patient_name"],
+        "created_on": datetime.datetime.now()
+    }
+    
+    db_helper.collection = db_helper.db["patients"]
+    query = {session["consultation_id"] : c_id}
+    # To save Patient Data in MongoDB
+    result = db_helper.update(consultation_data, query)
+   
+    return render_template("success.html", message = "Consultation Updated Successfully." , name= session['name'], email=session['email'] )
+
+@web_app.route("/search-patient")
+def search_patient():
+    return render_template("search.html", name=session["name"], email= session["email"])
+
+@web_app.route("/search-patient-from-db", methods= ["POST"])
+def search_patient_from_db():
+    patient_data = {
+        "email" : request.form["email"],
+        "doctor_email" : session["email"]
+    }
+
+    db_helper.collection = db_helper.db["patients"]
+    
+    # To fetch Data from MongoDB
+    result = db_helper.fetch(query = patient_data)
+    # result here is list of document(dictionaries) fetched from MongoDB
+
+    if len(result)>0:
+        print(result)
+        return render_template("patients.html", patients= result, name=session["name"], email=["email"])
+    else:
+        return render_template("error.html", message ="Patients Not Found" , name= session['name'], email=session['email'])
+
 
 
 def main():
