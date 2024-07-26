@@ -235,7 +235,6 @@ def add_consultation_in_db():
         "created_on": datetime.datetime.now()
     }
 
-
     db_helper.collection = db_helper.db["consultations"]
     # To save Consultation Data in MongoDB
     result = db_helper.insert(consultation_data)
@@ -294,13 +293,16 @@ def delete_consultation(id):
     db_helper.collection = db_helper.db["consultations"]
     db_helper.delete(query)
     return render_template("success.html", message = "Consultation Deleted Successfully." , name= session['name'], email=session['email'] )
+"""
+@web_app.route("/update-consultation/<id>")
+def update_consultation(id):
+    print("Patient to be updated: ", id)
 
-@web_app.route("/update-consultation/<c_id>")
-def update_consultation(c_id):
-    print("Consultation to be updated: ", c_id)
+    # Save Patient ID in Session, which needs to be updated
+    session["id"] = id
     
     # Fetch Document from patient collection, where ID Matches
-    query = {"consultation_id" : c_id}
+    query = {"_id": ObjectId(id)}
     db_helper.collection = db_helper.db["consultations"]
 
     #result is a list
@@ -309,31 +311,30 @@ def update_consultation(c_id):
     # As we will get list of documents, 0th index will be our document
     # with patient id matching we have passed
     patient_doc = result[0]
-    session["consultationt_id"] = c_id
     return render_template("update.html", name= session['name'], email=session['email'], patient = patient_doc )
 
-@web_app.route("/update-consultation-in-db", methods= ["POST"])
-def update_consultation_in_db():
+@web_app.route("/update-patient-in-db", methods= ["POST"])
+def update_patient_in_db():
     # Create Dictionary with data from HTML form
-    consultation_data = {
-        "complaints": request.form["complaints"],
-        "bp": request.form["bp"],
-        "temperature": request.form["temperature"],
-        "sugar": request.form["sugar"],
-        "medicines": request.form["medicines"],
-        "remarks": request.form["remarks"],
-        "followup": request.form["followup"],
-        "patient_name": request.form["patient_name"],
+    patient_data = {
+        "name": request.form["name"],
+        "email": request.form["email"],
+        "phone": request.form["phone"],
+        "gender": request.form["gender"],
+        "age": int(request.form["age"]),
+        "address": request.form["address"],
+        "doctor_email": session["email"],
+        "doctor_name": session["name"],
         "created_on": datetime.datetime.now()
     }
     
     db_helper.collection = db_helper.db["patients"]
-    query = {session["consultation_id"] : c_id}
+    query = {"_id": ObjectId(session["id"])}
     # To save Patient Data in MongoDB
-    result = db_helper.update(consultation_data, query)
+    result = db_helper.update(patient_data, query)
    
-    return render_template("success.html", message = "Consultation Updated Successfully." , name= session['name'], email=session['email'] )
-
+    return render_template("success.html", message = "Patient Updated Successfully." , name= session['name'], email=session['email'] )
+"""
 @web_app.route("/search-patient")
 def search_patient():
     return render_template("search.html", name=session["name"], email= session["email"])
@@ -352,12 +353,10 @@ def search_patient_from_db():
     # result here is list of document(dictionaries) fetched from MongoDB
 
     if len(result)>0:
-        print(result)
-        return render_template("patients.html", patients= result, name=session["name"], email=["email"])
+        # since we will have one patient searched, we will pass 0 
+        return render_template("patient-card.html", patient= result[0], name=session["name"], email=["email"])
     else:
         return render_template("error.html", message ="Patients Not Found" , name= session['name'], email=session['email'])
-
-
 
 def main():
     # To use Session Tracking, create a secret key
